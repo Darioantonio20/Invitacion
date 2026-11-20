@@ -3,12 +3,13 @@ import { createMusic } from './music.js'
 
 /* ===================== CONFIGURA AQUÍ ===================== */
 const EVENTO = {
-  fechaTexto: 'XX de Diciembre 2026', // cámbialo cuando haya fecha (ej. '20 de Diciembre 2026')
-  fechaCuentaRegresiva: '2026-12-20T20:00:00', // fecha tentativa para la cuenta regresiva
-  hora: 'De 8:00 PM a 12:00 de la noche',
-  lugar: 'Lugar por confirmar',
-  direccion: 'Dirección por confirmar',
-  mapsUrl: 'https://maps.google.com', // pega aquí el link de Google Maps
+  fechaTexto: 'Viernes 18 de Diciembre 2026',
+  fechaCuentaRegresiva: '2026-12-18T16:00:00',
+  hora: 'A partir de las 4:00 PM (tentativo)',
+  lugar: 'Salón Bambú · Jardín de Fiestas y Eventos',
+  direccion: 'Pensamiento 378, Paso Limón, 29049 Tuxtla Gutiérrez, Chis.',
+  mapsUrl: 'https://maps.app.goo.gl/9dwzLkHAG7vPEbWr6',
+  mapsEmbed: 'https://maps.google.com/maps?q=16.7628366,-93.0771203&z=16&output=embed',
 }
 /* ========================================================== */
 
@@ -112,6 +113,51 @@ function Reveal({ children, delay = 0, className = '' }) {
   )
 }
 
+const fotos = ['/salon/salon1.jpg', '/salon/salon2.jpg', '/salon/salon3.jpg', '/salon/salon4.jpg']
+const amenidades = [
+  ['🌳', 'Jardín amplio y fresco'], ['🍹', 'Barra con parrilla'], ['🧊', 'Refrigerador y hielera'],
+  ['🔈', 'Bocina y micrófono'], ['🪅', 'Espacio para piñata'], ['🌀', '8 ventiladores'],
+  ['🚻', '3 baños'], ['🛜', 'Internet'],
+]
+
+function Salon() {
+  const [sel, setSel] = useState(null)
+  return (
+    <section className="salon">
+      <Reveal>
+        <h3 className="section-title">El Rancho</h3>
+        <p className="salon-name">{EVENTO.lugar}</p>
+        <p className="salon-tag">💚 Un lugar amplio, fresco y cómodo 💚</p>
+      </Reveal>
+      <Reveal className="gallery">
+        {fotos.map((f, i) => (
+          <button key={f} className={`photo p${i}`} onClick={() => setSel(f)} aria-label={`Ver foto ${i + 1} del salón`}>
+            <img src={f} alt={`Salón Bambú foto ${i + 1}`} loading="lazy" />
+          </button>
+        ))}
+      </Reveal>
+      <Reveal className="amenidades">
+        {amenidades.map(([ic, t]) => (
+          <span key={t} className="chip"><b>{ic}</b>{t}</span>
+        ))}
+      </Reveal>
+      <Reveal className="map-card">
+        <iframe title="Mapa del salón" src={EVENTO.mapsEmbed} loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+        <div className="map-info">
+          <strong>📍 {EVENTO.direccion}</strong>
+          <a className="maps" href={EVENTO.mapsUrl} target="_blank" rel="noreferrer">Abrir en Google Maps →</a>
+        </div>
+      </Reveal>
+      {sel && (
+        <div className="lightbox" onClick={() => setSel(null)}>
+          <img src={sel} alt="Salón Bambú" />
+          <span>✕</span>
+        </div>
+      )}
+    </section>
+  )
+}
+
 const aportes = [
   { icon: '🥤', t: 'Refrescos' },
   { icon: '🧊', t: 'Hielo' },
@@ -186,7 +232,7 @@ export default function App() {
               <div className="info-grid">
                 <div className="info">
                   <span className="ic">📅</span>
-                  <small>Fecha (tentativa)</small>
+                  <small>Fecha</small>
                   <strong>{EVENTO.fechaTexto}</strong>
                 </div>
                 <div className="info">
@@ -212,6 +258,8 @@ export default function App() {
             </Reveal>
           </section>
 
+          <Salon />
+
           <section className="countdown">
             <Reveal>
               <h3 className="section-title">Faltan</h3>
@@ -223,7 +271,7 @@ export default function App() {
                   </div>
                 ))}
               </div>
-              <p className="note">*Cuenta regresiva con fecha tentativa</p>
+              <p className="note">*Hora tentativa: 4:00 PM</p>
             </Reveal>
           </section>
 
